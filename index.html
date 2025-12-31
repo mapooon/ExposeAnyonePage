@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="ExposeAnyone is a person-of-interest face forgery detector based on diffusion models">
+  <meta name="keywords" content="Nerfies, D-NeRF, NeRF">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ExposeAnyone: Personalized Audio-to-Expression Diffusion Models are Robust Zero-Shot Face Forgery Detectors</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script> -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+<body>
+
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="https://keunhong.com">
+      <span class="icon">
+          <i class="fas fa-home"></i>
+      </span>
+      </a>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          More Research
+        </a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="https://mapooon.github.io/Face2DiffusionPage/">
+            Face2Diffusion (CVPR2024)
+          </a>
+          <a class="navbar-item" href="https://mapooon.github.io/BlendFacePage/">
+            BlendFace (ICCV2023)
+          </a>
+          <a class="navbar-item" href="https://github.com/mapooon/SelfBlendedImages">
+            Self-Blended Images (CVPR2022)
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-3 publication-title">ExposeAnyone: Personalized Audio-to-Expression Diffusion Models are Robust Zero-Shot Face Forgery Detectors</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://mapooon.github.io">Kaede Shiohara</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="https://www.ee.t.u-tokyo.ac.jp/en/staff/yamasaki-toshihiko/">Toshihiko Yamasaki</a><sup>1</sup>,
+            <span class="author-block">
+              <a href="https://people.mpi-inf.mpg.de/~golyanik/">Vladislav Golyanik</a><sup>2</sup></span>
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>The University of Tokyo,</span>
+            <span class="author-block"><sup>2</sup>Max Planck Institute for Informatics</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              
+              <span class="link-block">
+                <a href=""
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv (Coming Soon)</span>
+                </a>
+              </span>
+              <!-- Video Link. -->
+              <span class="link-block">
+                <a href="https://www.youtube.com/watch?v=3Dvyze1g3Ig"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-youtube"></i>
+                  </span>
+                  <span>Video</span>
+                </a>
+              </span>
+              <!-- Dataset Link. -->
+              <span class="link-block">
+                <a href=""
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="far fa-images"></i>
+                  </span>
+                  <span>Dataset (Coming Soon)</span>
+                  </a>
+                </span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <div class="columns is-centered has-text-centered">
+      <img src="./static/images/teaser.jpg"
+                 class="interpolation-image"
+                 alt="Interpolation end reference image."/>
+      </div>
+      <h2 class="subtitle has-text-centered">
+        ExposeAnyone is a fully self-supervised person-of-interest face forgery detector.
+        We first pre-train our audio-to-expression diffusion model on a large scale unlabeled video collection. Then, we personalize our pre-trained model on a single or more reference videos of a subject by inserting a subject-specific adapter. Finally, we expose deepfake videos by the diffusion reconstruction distance.
+        Desite self-supervision, our method generalizes to a wide range of manipulations from traditional deepfakes to the latest video generation model, Sora2.
+      </h2>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+    <div class="container" style="margin-bottom: 2vh;">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+            <h2 class="title is-3">Video</h2>
+            <div class="publication-video">
+              <iframe width="560" height="315" src="https://www.youtube.com/embed/3Dvyze1g3Ig?si=SEfdXKTzsUxGwwOu" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+          </div>
+        </div>
+      </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Why is this work important?</h2>
+        <div class="content has-text-justified">
+          <ol>
+    <li>
+      Previous work mainly focuses on supervised learning with real and fake videos. However, it is well-known that such methods overfit to manipulation-specific artifacts and fail to detect unknown manipulations. Pseudo-fake augmentation strategies such as Face X-ray [Li+, CVPR20] and SBI [Shiohara+, CVPR22] mitigate the overfitting problem but could not cover all forgery patterns.
+    </li>
+    <li>
+      Self-supervised learning such as AVAD [Feng+, CVPR23] and POI-Forensics [Cozzolino+, CVPRW23] is promising because do not overfit to any manipulation-specific artifacts. However, existing self-supervised methods fail to learn effective features that can divide accurately real and fake classes only from self-supervision. As a result, current self-supervised methods are significantly inferior to supervised methods.
+    </li>
+  </ol>
+  <p>Our proposed ExposeAnyone approach is self-supervised, ie, manipulation-agnostic, yet achieves state-of-the-art generalizability and robustness.</p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+
+    <!-- Paper video. -->
+    <!-- <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Video</h2>
+        <div class="publication-video">
+          <iframe src="https://www.youtube.com/embed/MrKrnHhk8IA?rel=0&amp;showinfo=0"
+                  frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div> -->
+    <!--/ Paper video. -->
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Detecting unknown deepfake manipulations remains one of the most challenging problems in face forgery detection.
+            Current state-of-the-art approaches fail to generalize to unseen manipulations, as they primarily rely on supervised training with existing deepfakes or pseudo-fakes, which leads to overfitting to specific forgery patterns.
+            In contrast, self-supervised methods offer greater potential for generalization, but existing work struggles to learn discriminative representations only from self-supervision.
+          </p>
+          <p>
+            In this paper, we propose ExposeAnyone, a fully self-supervised approach based on diffusion models that generate expression sequences from audio.
+            Our key finding is that, given the reference sets of specific subjects to be authenticated,
+            our personalized audio-to-diffusion models distinguish real videos of the subjects from deepfakes mimicking them.
+          </p>
+          <p>
+            Extensive experiments demonstrate that 1) our method outperforms the previous state-of-the-art method by 4.22 percentage points in the average AUC on DF-TIMIT, DFDCP, KoDF, and IDForge datasets, 
+            2) our model is also capable of detecting Sora2-generated videos, where the previous approaches perform poorly, and
+            3) our method is highly robust to corruptions such as blur and compression, highlighting the applicability in real-world face forgery detection.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+
+    <!-- Paper video. -->
+    <!-- <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Video</h2>
+        <div class="publication-video">
+          <iframe src="https://www.youtube.com/embed/MrKrnHhk8IA?rel=0&amp;showinfo=0"
+                  frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div> -->
+    <!--/ Paper video. -->
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+
+    <!-- Matting. -->
+    <div class="columns is-centered">
+      <div class="column is-three-quarters has-text-centered">
+        <h2 class="title is-3">Fakeness Visualization on Real and Fake Videos</h2>
+        <p class="content">
+          The blue and red lines represent the fakeness scores
+          over the frame index of a real video and that of a deepfake video mimicking the subject, respectively. Our model exposes the talking-identity discrepancy between the personalized subject and manipulated subject.
+        </p>
+        <div class="columns is-centered">
+          <div class="column is-8">
+            <video id="idforge-1" autoplay controls muted loop playsinline width="100%" height="100%">
+              <source src="./static/videos/visualization/sama.mp4"
+                      type="video/mp4">
+            </video>
+          </div>
+          <div class="column is-8">
+            <video id="idforge-2" autoplay controls muted loop playsinline width="100%" height="100%">
+              <source src="./static/videos/visualization/clip_000002____clip_000002.mp4"
+                      type="video/mp4">
+            </video>
+          </div>
+        </div>
+        <p class="content">
+          On our Sora2 Cameo Forensics Preview (S2CFP) dataset
+        </p>
+        <div class="columns is-centered">
+          <div class="column is-8">
+            <video id="dftimit-1" autoplay controls muted loop playsinline width="100%" height="100%">
+              <source src="./static/videos/visualization/sx229____sx282-video-mdab0.mp4"
+                      type="video/mp4">
+            </video>
+          </div>
+          <div class="column is-8">
+            <video id="dftimit-2" autoplay controls muted loop playsinline width="100%" height="100%">
+              <source src="./static/videos/visualization/sx274____sx313-video-fedw0.mp4"
+                      type="video/mp4">
+            </video>
+          </div>
+        </div>
+        <p class="content">
+          On DF-TIMIT dataset [Korshunov+, arXiv18]
+        </p>
+        <div class="columns is-centered">
+          <div class="column is-8">
+            <video id="dfdcp-1" autoplay controls muted loop playsinline width="100%" height="100%">
+              <source src="./static/videos/visualization/1061402_D_001____1061402_2044170_A_001.mp4"
+                      type="video/mp4">
+            </video>
+          </div>
+          <div class="column is-8">
+            <video id="dfdcp-2" autoplay controls muted loop playsinline width="100%" height="100%">
+              <source src="./static/videos/visualization/804259_E_002____804259_1929178_G_002.mp4"
+                      type="video/mp4">
+            </video>
+          </div>
+        </div>
+        <p class="content">
+          On DFDCP dataset [Dolhansky+, arXiv20]
+        </p>
+        <div class="columns is-centered">
+          <div class="column is-8">
+            <video id="kodf-1" autoplay controls muted loop playsinline width="100%" height="100%">
+              <source src="./static/videos/visualization/6a56497e819920c075e9_084____6a56497e819920c075e9_ccc262d36a042ac729c7_4_0061.mp4"
+                      type="video/mp4">
+            </video>
+          </div>
+          <div class="column is-8">
+            <video id="kodf-2" autoplay controls muted loop playsinline width="100%" height="100%">
+              <source src="./static/videos/visualization/1b3539a0ba04b7adc817_047____1b3539a0ba04b7adc817_430836b686a5e2ef18f0_4_1760.mp4"
+                      type="video/mp4">
+            </video>
+          </div>
+        </div>
+        <p class="content">
+          On KoDF dataset [Kwon+, ICCV21]
+        </p>
+        <div class="columns is-centered">
+          <div class="column is-8">
+            <video id="idforge-1" autoplay controls muted loop playsinline width="100%" height="100%">
+              <source src="./static/videos/visualization/id29_scene_0004-54____id29_scene_0004-13.mp3.mp4"
+                      type="video/mp4">
+            </video>
+          </div>
+          <div class="column is-8">
+            <video id="idforge-2" autoplay controls muted loop playsinline width="100%" height="100%">
+              <source src="./static/videos/visualization/id09_scene_0141____id09_scene_0017.mp3.mp4"
+                      type="video/mp4">
+            </video>
+          </div>
+        </div>
+        <p class="content">
+          On IDForge dataset [Xu+, MM24]
+        </p>
+      </div>
+    </div>
+    <!--/ Matting. -->
+
+    
+
+    <!-- Animation. -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Comparison with Previous State-of-the-Arts</h2>
+
+        <!-- Interpolating. -->
+        <h3 class="title is-4">Generalization to Traditional Deepfakes</h3>
+        <div class="content has-text-justified">
+          <p>
+            We evaluate the generalization ability to unseen manipulations on DF-TIMIT, DFDCP, KoDF, and IDForge dataset.
+            Our method achieves the best average AUC.
+          </p>
+        </div>
+        <div class="content has-text-centered">
+          <img src="./static/images/generalization.png"/>
+        </div>
+        <br/>
+        <!--/ Interpolating. -->
+
+        <!-- Interpolating. -->
+        <h3 class="title is-4">Generalization to Sora2</h3>
+        <div class="content has-text-justified">
+          <p>
+            Our model is also capable of detecting Sora2-generated videos while previous methods perform poorly.
+          </p>
+        </div>
+        <div class="content has-text-centered">
+          <img src="./static/images/sora2.png"/>
+        </div>
+        <br/>
+        <!--/ Interpolating. -->
+
+        <!-- Re-rendering. -->
+        <h3 class="title is-4">Robustness to Common Corruptions</h3>
+        <div class="content has-text-justified">
+          <p>
+            Our method is highly robust to the corruptions, especially jpeg and video compression, 
+            which detectors encounter more frequently in real-world scenarios. 
+          </p>
+        </div>
+        <div class="content has-text-centered">
+          <img src="./static/images/robustness.jpg"/>
+        </div>
+        <!--/ Re-rendering. -->
+        
+
+      </div>
+    </div>
+    <!--/ Animation. -->
+
+
+    <!-- Concurrent Work. -->
+    <!-- <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Related Links</h2>
+
+        <div class="content has-text-justified">
+          <p>
+            There's a lot of excellent work that was introduced around the same time as ours.
+          </p>
+          <p>
+            <a href="https://arxiv.org/abs/2104.09125">Progressive Encoding for Neural Optimization</a> introduces an idea similar to our windowed position encoding for coarse-to-fine optimization.
+          </p>
+          <p>
+            <a href="https://www.albertpumarola.com/research/D-NeRF/index.html">D-NeRF</a> and <a href="https://gvv.mpi-inf.mpg.de/projects/nonrigid_nerf/">NR-NeRF</a>
+            both use deformation fields to model non-rigid scenes.
+          </p>
+          <p>
+            Some works model videos with a NeRF by directly modulating the density, such as <a href="https://video-nerf.github.io/">Video-NeRF</a>, <a href="https://www.cs.cornell.edu/~zl548/NSFF/">NSFF</a>, and <a href="https://neural-3d-video.github.io/">DyNeRF</a>
+          </p>
+          <p>
+            There are probably many more by the time you are reading this. Check out <a href="https://dellaert.github.io/NeRF/">Frank Dellart's survey on recent NeRF papers</a>, and <a href="https://github.com/yenchenlin/awesome-NeRF">Yen-Chen Lin's curated list of NeRF papers</a>.
+          </p>
+        </div>
+      </div>
+    </div> -->
+    <!--/ Concurrent Work. -->
+
+  </div>
+</section>
+
+
+<!-- <section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@article{park2021nerfies,
+  author    = {Park, Keunhong and Sinha, Utkarsh and Barron, Jonathan T. and Bouaziz, Sofien and Goldman, Dan B and Seitz, Steven M. and Martin-Brualla, Ricardo},
+  title     = {Nerfies: Deformable Neural Radiance Fields},
+  journal   = {ICCV},
+  year      = {2021},
+}</code></pre>
+  </div>
+</section> -->
+
+
+<footer class="footer">
+  <div class="container">
+    <!-- <div class="content has-text-centered">
+      <a class="icon-link"
+         href="./static/videos/nerfies_paper.pdf">
+        <i class="fas fa-file-pdf"></i>
+      </a>
+      <a class="icon-link" href="https://github.com/keunhong" class="external-link" disabled>
+        <i class="fab fa-github"></i>
+      </a>
+    </div> -->
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a <a rel="license"
+                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+          <p>
+            This means you are free to borrow the <a
+              href="https://github.com/nerfies/nerfies.github.io">source code</a> of this website,
+            we just ask that you link back to this page in the footer.
+            Please remember to remove the analytics code included in the header of the website which
+            you do not want on your website.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
